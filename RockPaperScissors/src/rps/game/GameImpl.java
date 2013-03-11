@@ -16,10 +16,12 @@ public class GameImpl implements Game {
 
 	private GameListener listener1;
 	private GameListener listener2;
+	private Figure[] field  = new Figure[42];
 
 	public GameImpl(GameListener listener1, GameListener listener2) {
 		this.listener1 = listener1;
 		this.listener2 = listener2;
+
 	}
 
 	@Override
