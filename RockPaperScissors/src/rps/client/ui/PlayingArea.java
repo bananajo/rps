@@ -23,7 +23,7 @@ public class PlayingArea extends JPanel {
 	
 	private Game game = null;
 	private Player player;
-	int width = 800, height = 600, fieldsX = 6, fieldsY = 7;
+	int width = 800, height = 600, fieldsX = 7, fieldsY = 6;
 	
 	/**
 	 * Construktor
@@ -49,14 +49,14 @@ public class PlayingArea extends JPanel {
 		this.game = game;
 		this.player = player;
 		try {
-			creatGameField();
+			createGameField();
 		} catch (RemoteException e) {
 			// TODO Automatisch generierter Erfassungsblock
 			e.printStackTrace();
 		}
 	}
 
-	private void creatGameField() throws RemoteException {
+	private void createGameField() throws RemoteException {
 		for (int i = 0; i < fieldsY; i++)
 			for (int j = 0; j < fieldsX; j++) {
 				JComponent field;
