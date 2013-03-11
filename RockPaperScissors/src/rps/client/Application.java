@@ -50,7 +50,7 @@ public class Application {
 
 		startupPane = new StartupPane(rootPane, uiController, gameController, ais);
 		waitingPane = new WaitingPane(rootPane, uiController);
-		gamePane = new GamePane(rootPane, frame);
+		gamePane = new GamePane(rootPane);
 
 		frame.pack();
 		frame.setLocationRelativeTo(null);
