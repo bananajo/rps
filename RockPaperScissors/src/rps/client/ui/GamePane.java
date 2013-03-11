@@ -8,7 +8,6 @@ import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
 
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -24,18 +23,18 @@ public class GamePane {
 	private final JTextArea chat = new JTextArea(4, 30);
 	private final JScrollPane scrollPane = new JScrollPane(chat);
 	
+	private final LineupPane lineupPane;
+	
 	//Spielfeld:
-	private final PlayingArea playingArea = new PlayingArea();
-	private final JFrame frame;
+	//private final PlayingArea playingArea = new PlayingArea();
+	//private final JFrame frame;
 
 	private Game game;
 	private Player player;
 
-	public GamePane(Container parent, JFrame frame) {
-		this.frame = frame;
-
+	public GamePane(Container parent) {
 		gamePane.setLayout(new BoxLayout(gamePane, Y_AXIS));
-		gamePane.add(playingArea);
+		lineupPane = new LineupPane(gamePane);
 		gamePane.add(chatInput);
 		gamePane.add(scrollPane);
 
@@ -91,15 +90,6 @@ public class GamePane {
 		this.game = game;
 		reset();
 		gamePane.setVisible(true);
-		frame.pack();
-		buildField();
-	}
-
-	/**
-	 * Spielfeld initialiseren
-	 */
-	private void buildField() {
-		playingArea.init(game, player);
 	}
 
 	public void receivedMessage(Player sender, String message) {
