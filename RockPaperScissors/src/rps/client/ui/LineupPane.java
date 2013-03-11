@@ -8,6 +8,7 @@ import static javax.swing.BoxLayout.Y_AXIS;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -16,6 +17,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import rps.game.Game;
+import rps.game.data.FigureKind;
+import rps.game.data.Player;
+
 /**
  * @author Carsten Porth
  * 
@@ -23,93 +28,109 @@ import javax.swing.JPanel;
 public class LineupPane {
 
 	private final JPanel lineupPane = new JPanel();
-	
+
 	private final JButton newBtn = new JButton("Andere Aufstellung");
 	private final JButton okBtn = new JButton("OK");
 	private String[] lineup;
 
+	private Game game;
+	private Player player;
 
-	public LineupPane(JPanel parent) {
-			lineupPane.setLayout(new BoxLayout(lineupPane, Y_AXIS));
-			lineupPane.add(new JLabel("Bitte wähle deine Startaufstellung"));
+	public LineupPane(JPanel parent, Game game, Player player) {
+		this.game = game;
+		this.player = player;
 
-			addLineup(lineupPane);
-			
-			lineupPane.add(newBtn);
-			lineupPane.add(okBtn);
-			
-			parent.add(lineupPane);
-			
-			bindActions();
+		lineupPane.setLayout(new BoxLayout(lineupPane, Y_AXIS));
+		lineupPane.add(new JLabel("Bitte wähle deine Startaufstellung"));
+
+		addLineup(lineupPane);
+
+		lineupPane.add(newBtn);
+		lineupPane.add(okBtn);
+
+		parent.add(lineupPane);
+
+		bindActions();
 	}
-	
+
 	/**
 	 * Setzt die Startaufstellung zusammen und gibt sie als Panel zurück
-	 * @param container Startaufstellung als Panel
+	 * 
+	 * @param container
+	 *            Startaufstellung als Panel
 	 */
 	private void addLineup(JPanel container) {
 		JPanel p = new JPanel();
 		p.setLayout(new GridLayout(2, 7));
 		lineup = generateLineup();
-				
-		for(int i = 0; i < lineup.length; i++) {
+
+		for (int i = 0; i < lineup.length; i++) {
 			p.add(new JLabel(lineup[i]));
 		}
-		
+
 		container.add(p, 1);
 	}
 
-
 	private void bindActions() {
 		okBtn.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Aufstellung registrieren
-				// TODO LineupPane ausblenden und über RPS ersten Spieler bestimmen
+				FigureKind[] assignment = new FigureKind[14];
+				for (int n = 0; n < lineup.length; n++) {
+					switch (lineup[n]) {
+					case "r":
+						assignment[n] = FigureKind.ROCK;
+						break;
+					case "p":
+						assignment[n] = FigureKind.PAPER;
+						break;
+					case "s":
+						assignment[n] = FigureKind.SCISSORS;
+						break;
+					case "f":
+						assignment[n] = FigureKind.FLAG;
+						break;
+					case "t":
+						assignment[n] = FigureKind.TRAP;
+						break;
+					}
+				}
 				
-			}			
+				try {
+					game.setInitialAssignment(player, assignment);
+				} catch (RemoteException e1) {
+					// TODO Automatisch generierter Erfassungsblock
+					e1.printStackTrace();
+				}
+				
+				lineupPane.hide();
+			}
 		});
-		
+
 		newBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//addLineup(lineupPane);
+				// addLineup(lineupPane);
 				lineupPane.remove(1);
 				addLineup(lineupPane);
 				lineupPane.repaint();
 				lineupPane.revalidate();
-			}			
+			}
 		});
-		
+
 	}
 
-
 	/**
-	 * r = Rock
-	 * p = Paper
-	 * s = Scissors
-	 * t = Trap
-	 * f = Flag
+	 * r = Rock p = Paper s = Scissors t = Trap f = Flag
+	 * 
 	 * @return Array mit zufälliger Startaufstellung
 	 */
 	public static String[] generateLineup() {
 		// Array für Startaufstellung
-		String[] lineup = new String[14];
-		
-		// Flagge und Falle immer in der Aufstellung:
-		lineup[0] = "t";
-		lineup[1] = "f";
-		
-		// Zur Auswahl stehende andere Figuren:
-		String[] figures = {"r", "p", "s"};
-		
-		// 12 zufällige Figuren auswählen und der Startaufstellung hinzufügen:
-		for (int n = 0; n < 12; n++) {
-			int rand = (int) (Math.random() * 3);
-			lineup[n+2] = figures[rand];
-		}
-		
-		Collections.shuffle(Arrays.asList(lineup));	//Mischen
+		String[] lineup = { "f", "t", "s", "s", "s", "s", "r", "r", "r", "r",
+				"p", "p", "p", "p" };
+		Collections.shuffle(Arrays.asList(lineup)); // Mischen
 		return lineup;
 	}
 

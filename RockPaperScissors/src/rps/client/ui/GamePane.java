@@ -34,7 +34,7 @@ public class GamePane {
 
 	public GamePane(Container parent) {
 		gamePane.setLayout(new BoxLayout(gamePane, Y_AXIS));
-		lineupPane = new LineupPane(gamePane);
+		lineupPane = new LineupPane(gamePane, game, player);
 		gamePane.add(chatInput);
 		gamePane.add(scrollPane);
 
