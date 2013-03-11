@@ -37,7 +37,7 @@ public class StartupPane {
 	private final JComboBox<String> hostIP = new JComboBox<String>();
 
 	private final JLabel joinLabel = new JLabel("Join:");
-	private final JTextField joinAddr = new JTextField();
+	private final JTextField joinAddr = new JTextField("127.0.0.1");
 
 	private final JLabel aiLabel = new JLabel("AIs:");
 	private final JComboBox<GameListener> comboAI = new JComboBox<GameListener>();
